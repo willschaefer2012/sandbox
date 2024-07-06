@@ -1,0 +1,68 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Set up display
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Monster Fighter")
+
+# Define colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+
+# Set up the player
+player_size = 50
+player_pos = [screen.get_width() // 2, screen.get_height() - 2 * player_size]
+player_speed = 10
+
+# Set up the monster
+monster_size = 50
+monster_pos = [random.randint(0, screen.get_width() - monster_size), 0]
+monster_speed = 5
+
+# Set up the score
+score = 0
+font = pygame.font.SysFont("monospace", 35)
+
+# Game Loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Player movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_pos[0] > 0:
+        player_pos[0] -= player_speed
+    if keys[pygame.K_RIGHT] and player_pos[0] < screen.get_width() - player_size:
+        player_pos[0] += player_speed
+
+    # Monster movement
+    monster_pos[1] += monster_speed
+    if monster_pos[1] > screen.get_height():
+        monster_pos[1] = 0
+        monster_pos[0] = random.randint(0, screen.get_width() - monster_size)
+        score += 1
+
+    # Check for collision
+    if (monster_pos[1] + monster_size > player_pos[1] and
+            player_pos[0] < monster_pos[0] < player_pos[0] + player_size or
+            player_pos[0] < monster_pos[0] + monster_size < player_pos[0] + player_size):
+        running = False
+
+    # Drawing everything
+    screen.fill(WHITE)
+    pygame.draw.rect(screen, BLUE, (*player_pos, player_size, player_size))
+    pygame.draw.rect(screen, RED, (*monster_pos, monster_size, monster_size))
+
+    # Display score
+    score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+    screen.blit(score_text, (10, 10))
+
+    pygame.display.flip()
+
+pygame.quit()

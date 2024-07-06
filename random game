@@ -1,0 +1,55 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Screen dimensions
+screen_width = 800
+screen_height = 600
+
+# Colors
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+# Set up the screen
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption('Simple Pygame Example')
+
+# Define the player object
+player_size = 50
+player_pos = [screen_width // 2, screen_height // 2]
+player_speed = 5
+
+# Game loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Get keys pressed
+    keys = pygame.key.get_pressed()
+
+    # Move player
+    if keys[pygame.K_LEFT]:
+        player_pos[0] -= player_speed
+    if keys[pygame.K_RIGHT]:
+        player_pos[0] += player_speed
+    if keys[pygame.K_UP]:
+        player_pos[1] -= player_speed
+    if keys[pygame.K_DOWN]:
+        player_pos[1] += player_speed
+
+    # Fill screen with black
+    screen.fill(black)
+
+    # Draw player (a white square)
+    pygame.draw.rect(screen, white, (player_pos[0], player_pos[1], player_size, player_size))
+
+    # Update display
+    pygame.display.flip()
+
+    # Control game speed
+    pygame.time.Clock().tick(30)
